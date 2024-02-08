@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 
 const ProductStore = create((set) => ({
+	isLoading: false,
 	//*============================Brand-List===============================
 	BrandList: null,
 	BrandAPIError: null,
@@ -148,6 +149,31 @@ const ProductStore = create((set) => ({
 			}
 		} catch (error) {
 			set({ ListBySearchError: error.message || "An error occurred" });
+		}
+	},
+
+	//*=====================Filtering-Products========================
+	FilterListError: null,
+	ListByFilterAPI: async (postBody) => {
+		set({ isLoading: true });
+		try {
+			const { data } = await axios.post(
+				"/product-list-by-filter",
+				postBody
+			);
+			if (data.success) {
+				set({
+					ProductList: data.payload?.filteredProduct,
+					FilterListError: null,
+					isLoading: false,
+				});
+			} else {
+				set({
+					FilterListError: data.message || "Something went wrong",
+				});
+			}
+		} catch (error) {
+			set({ FilterListError: error.message || "An error occurred" });
 		}
 	},
 }));
