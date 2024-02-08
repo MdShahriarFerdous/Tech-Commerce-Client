@@ -29,7 +29,7 @@ const NavBar = () => {
 									support-plainb@gmail.com
 								</span>
 								<span className="f-12 mx-2">
-									<i class="bi bi-telephone-forward mx-2"></i>
+									<i className="bi bi-telephone-forward mx-2"></i>
 									01794661657
 								</span>
 							</span>

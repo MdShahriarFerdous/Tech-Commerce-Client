@@ -1,9 +1,14 @@
-import React, { useEffect } from "react";
-import ProductStore from "../../store/ProductStore";
+import { useEffect, Suspense, lazy } from "react";
 import { useParams } from "react-router-dom";
-import Layout from "../../components/layout/Layout";
+import ProductStore from "../../store/ProductStore";
+
+const Layout = lazy(() => import("../../components/layout/Layout"));
+const AliasProductList = lazy(() =>
+	import("../../components/product/AliasProductList")
+);
+
 import CategoriesSkeleton from "../../skeletons/CategoriesSkeleton";
-import AliasProductList from "../../components/product/AliasProductList";
+import FallbackLoader from "../../components/fallback-loader/FallbackLoader";
 
 const ProductByCategory = () => {
 	const { ListByCategoryError, ListByCategoryAPI } = ProductStore();
@@ -21,18 +26,21 @@ const ProductByCategory = () => {
 
 	if (ListByCategoryError !== null) {
 		console.log(ListByCategoryError);
-		return (
-			<Layout>
-				<CategoriesSkeleton />
-			</Layout>
-		);
-	} else {
-		return (
-			<Layout>
-				<AliasProductList />
-			</Layout>
-		);
 	}
+
+	return (
+		<Suspense fallback={FallbackLoader}>
+			<Layout>
+				{ListByCategoryError !== null ? (
+					<>
+						<CategoriesSkeleton />
+					</>
+				) : (
+					<AliasProductList />
+				)}
+			</Layout>
+		</Suspense>
+	);
 };
 
 export default ProductByCategory;

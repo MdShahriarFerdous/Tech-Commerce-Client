@@ -26,8 +26,8 @@ const AliasProductList = () => {
 						</label>
 						<input
 							min={0}
-							max={1000000}
-							step={1000}
+							max={100000}
+							step={100}
 							type="range"
 							className="form-range"
 						/>
@@ -36,8 +36,8 @@ const AliasProductList = () => {
 						</label>
 						<input
 							min={0}
-							max={1000000}
-							step={1000}
+							max={100000}
+							step={100}
 							type="range"
 							className="form-range"
 						/>

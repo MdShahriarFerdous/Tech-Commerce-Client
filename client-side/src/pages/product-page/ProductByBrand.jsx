@@ -1,9 +1,14 @@
-import React, { useEffect } from "react";
-import ProductStore from "../../store/ProductStore";
+import { useEffect, Suspense, lazy } from "react";
 import { useParams } from "react-router-dom";
-import Layout from "./../../components/layout/Layout";
-import AliasProductList from "../../components/product/AliasProductList";
+import ProductStore from "../../store/ProductStore";
+
+const Layout = lazy(() => import("../../components/layout/Layout"));
+const AliasProductList = lazy(() =>
+	import("../../components/product/AliasProductList")
+);
+
 import ProductsSkeleton from "./../../skeletons/ProductsSkeleton";
+import FallbackLoader from "../../components/fallback-loader/FallbackLoader";
 
 const ProductByBrand = () => {
 	const { ListByBrandError, ListByBrandAPI } = ProductStore();
@@ -21,18 +26,21 @@ const ProductByBrand = () => {
 
 	if (ListByBrandError !== null) {
 		console.log(ListByBrandError);
-		return (
-			<Layout>
-				<ProductsSkeleton />
-			</Layout>
-		);
-	} else {
-		return (
-			<Layout>
-				<AliasProductList />
-			</Layout>
-		);
 	}
+
+	return (
+		<Suspense fallback={FallbackLoader}>
+			<Layout>
+				{ListByBrandError !== null ? (
+					<>
+						<ProductsSkeleton />
+					</>
+				) : (
+					<AliasProductList />
+				)}
+			</Layout>
+		</Suspense>
+	);
 };
 
 export default ProductByBrand;

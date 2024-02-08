@@ -1,9 +1,13 @@
+import { useEffect, Suspense, lazy } from "react";
 import { useParams } from "react-router-dom";
 import ProductStore from "../../store/ProductStore";
-import { useEffect } from "react";
-import Layout from "../../components/layout/Layout";
-import AliasProductList from "../../components/product/AliasProductList";
+
+const Layout = lazy(() => import("../../components/layout/Layout"));
+const AliasProductList = lazy(() =>
+	import("../../components/product/AliasProductList")
+);
 import ProductsSkeleton from "../../skeletons/ProductsSkeleton";
+import FallbackLoader from "../../components/fallback-loader/FallbackLoader";
 
 const ProductBySearch = () => {
 	const { ListBySearchError, ListBySearchAPI } = ProductStore();
@@ -21,18 +25,21 @@ const ProductBySearch = () => {
 
 	if (ListBySearchError !== null) {
 		console.log(ListBySearchError);
-		return (
-			<Layout>
-				<ProductsSkeleton />
-			</Layout>
-		);
-	} else {
-		return (
-			<Layout>
-				<AliasProductList />
-			</Layout>
-		);
 	}
+
+	return (
+		<Suspense fallback={FallbackLoader}>
+			<Layout>
+				{ListBySearchError !== null ? (
+					<>
+						<ProductsSkeleton />
+					</>
+				) : (
+					<AliasProductList />
+				)}
+			</Layout>
+		</Suspense>
+	);
 };
 
 export default ProductBySearch;
