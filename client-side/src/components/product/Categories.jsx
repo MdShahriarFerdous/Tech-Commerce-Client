@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import CategoriesSkeleton from "../../skeletons/CategoriesSkeleton";
 import ProductStore from "../../store/ProductStore";
 import { Link } from "react-router-dom";

@@ -176,6 +176,54 @@ const ProductStore = create((set) => ({
 			set({ FilterListError: error.message || "An error occurred" });
 		}
 	},
+
+	//*=====================Product's-Details-Show========================
+	ProductDetails: null,
+	ProductDetailsError: null,
+	ProductDetailsAPI: async (productId) => {
+		set({ isLoading: true });
+		try {
+			const { data } = await axios.get(`/product-details/${productId}`);
+			if (data.success) {
+				set({
+					ProductDetails: data.payload?.productDetails,
+					ProductDetailsError: null,
+					isLoading: false,
+				});
+			} else {
+				set({
+					FilterListError: data.message || "Something went wrong",
+				});
+			}
+		} catch (error) {
+			set({ FilterListError: error.message || "An error occurred" });
+		}
+	},
+
+	//*=====================Product's-Review-Show========================
+	ReviewList: null,
+	ReviewListError: null,
+	ReviewListAPI: async (productId) => {
+		set({ isLoading: true });
+		try {
+			const { data } = await axios.get(
+				`/product-review-list/${productId}`
+			);
+			if (data.success) {
+				set({
+					ReviewList: data.payload?.productReviewList,
+					ReviewListError: null,
+					isLoading: false,
+				});
+			} else {
+				set({
+					ReviewListError: data.message || "Something went wrong",
+				});
+			}
+		} catch (error) {
+			set({ ReviewListError: error.message || "An error occurred" });
+		}
+	},
 }));
 
 export default ProductStore;

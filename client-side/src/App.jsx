@@ -9,6 +9,7 @@ import BannedPage from "./pages/banned-page/BannedPage";
 import ProductByBrand from "./pages/product-page/ProductByBrand";
 import ProductByCategory from "./pages/product-page/ProductByCategory";
 import ProductBySearch from "./pages/product-page/ProductBySearch";
+import ProductDetails from "./pages/product-page/ProductDetails";
 
 const App = () => {
 	return (
@@ -32,6 +33,10 @@ const App = () => {
 				<Route
 					path="/product-search/:keyword"
 					element={<ProductBySearch />}
+				/>
+				<Route
+					path="/product-details/:productId"
+					element={<ProductDetails />}
 				/>
 				<Route path="*" element={<PageNotFound />} replace />
 			</Routes>
