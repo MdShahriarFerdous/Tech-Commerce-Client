@@ -12,7 +12,9 @@ const VerifyCode = () => {
 	//*===========================Local-Storage-Data===========================
 	let localStorageUserData;
 	const data = localStorage.getItem("basicUser");
-	data ? (localStorageUserData = JSON.parse(data)) : null;
+	data
+		? (localStorageUserData = JSON.parse(data))
+		: console.error("User data not found in local storage");
 
 	//*===========================CountDown-Logics==============================
 	const renderer = ({ minutes, seconds, completed }) => {
@@ -26,7 +28,7 @@ const VerifyCode = () => {
 
 			canResend
 				? Cookies.set("countCookie", resendTryCount, {
-						expires: 1 / 44,
+						expires: 1 / 144,
 				  })
 				: null;
 			return "";
@@ -58,7 +60,7 @@ const VerifyCode = () => {
 
 			resendTryCount > 0
 				? Cookies.set("countCookie", resendTryCount, {
-						expires: 1 / 44,
+						expires: 1 / 144,
 				  }) && setIsCountFinish(false)
 				: null;
 
