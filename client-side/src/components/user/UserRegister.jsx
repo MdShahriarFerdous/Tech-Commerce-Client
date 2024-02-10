@@ -53,7 +53,7 @@ const UserRegister = () => {
 								className="form-group"
 								onSubmit={formik.handleSubmit}>
 								<label
-									className="form-label my-2"
+									className="form-label mt-2 mb-1"
 									style={{
 										fontWeight: "500",
 										color: "#4d5461",
@@ -77,7 +77,7 @@ const UserRegister = () => {
 									)}
 
 								<label
-									className="form-label my-2"
+									className="form-label mt-3 mb-1"
 									style={{
 										fontWeight: "500",
 										color: "#4d5461",
@@ -101,7 +101,7 @@ const UserRegister = () => {
 									)}
 
 								<label
-									className="form-label my-2"
+									className="form-label mt-3 mb-1"
 									style={{
 										fontWeight: "500",
 										color: "#4d5461",
