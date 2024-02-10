@@ -1,16 +1,16 @@
-import { lazy, Suspense } from "react";
-import UserLogin from "./../components/user/UserLogin";
+import React, { Suspense, lazy } from "react";
+import VerifyCode from "../components/user/VerifyCode";
 import FallbackLoader from "../components/fallback-loader/FallbackLoader";
 const Layout = lazy(() => import("../components/layout/Layout"));
 
-const LoginPage = () => {
+const VerifyPage = () => {
 	return (
 		<Suspense fallback={FallbackLoader}>
 			<Layout>
-				<UserLogin />
+				<VerifyCode />
 			</Layout>
 		</Suspense>
 	);
 };
 
-export default LoginPage;
+export default VerifyPage;

@@ -3,12 +3,10 @@ import { useParams } from "react-router-dom";
 import ProductStore from "../../store/ProductStore";
 
 const Layout = lazy(() => import("../../components/layout/Layout"));
-const AliasProductList = lazy(() =>
-	import("../../components/product/AliasProductList")
-);
 
 import ProductsSkeleton from "./../../skeletons/ProductsSkeleton";
 import FallbackLoader from "../../components/fallback-loader/FallbackLoader";
+import AliasProductList from "./../../components/product/AliasProductList";
 
 const ProductByBrand = () => {
 	const { ListByBrandError, ListByBrandAPI } = ProductStore();

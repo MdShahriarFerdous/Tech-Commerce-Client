@@ -10,6 +10,7 @@ import ProductByBrand from "./pages/product-page/ProductByBrand";
 import ProductByCategory from "./pages/product-page/ProductByCategory";
 import ProductBySearch from "./pages/product-page/ProductBySearch";
 import ProductDetails from "./pages/product-page/ProductDetails";
+import VerifyPage from "./pages/VerifyPage";
 
 const App = () => {
 	return (
@@ -18,6 +19,7 @@ const App = () => {
 				<Route path="/" element={<HomePage />} />
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/register" element={<RegisterPage />} />
+				<Route path="/verify-code" element={<VerifyPage />} />
 				{/* <Route path="/user" element={<PrivateRoute />}>
 					<Route path="secret-page" element={<SecretPage />} />
 				</Route> */}
