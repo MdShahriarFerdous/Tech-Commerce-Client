@@ -7,3 +7,9 @@ export const getBasicUserData = () => {
 		return null;
 	}
 };
+
+export const unauthorized = (code) => {
+	if (code === 401 || code === 400) {
+		window.location.href = "/login";
+	}
+};

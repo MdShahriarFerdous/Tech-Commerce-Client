@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { getBasicUserData } from "../utility/utility";
+import { getBasicUserData, unauthorized } from "../utility/utility";
 import toast from "react-hot-toast";
 
 const UserStore = create((set) => ({
@@ -191,6 +191,53 @@ const UserStore = create((set) => ({
 			}
 		} catch (error) {
 			set({ LogoutError: error.message || "An error occurred" });
+		}
+	},
+
+	//*===============================Profile-Form-OnChange==================================
+	ProfileFormData: {
+		cus_add: "",
+		cus_city: "",
+		cus_country: "",
+		cus_fax: "",
+		cus_name: "",
+		cus_phone: "",
+		cus_postcode: "",
+		cus_state: "",
+		ship_add: "",
+		ship_city: "",
+		ship_country: "",
+		ship_name: "",
+		ship_phone: "",
+		ship_postcode: "",
+		ship_state: "",
+	},
+	ProfileFormChange: (name, value) => {
+		set((state) => ({
+			ProfileFormData: {
+				...state.ProfileFormData,
+				[name]: value,
+			},
+		}));
+	},
+	//*===============================Profile-Form-Details==================================
+	FormDetailsLoading: false,
+	ProfileFormDetails: null,
+	ProfileDetailsReadAPI: async () => {
+		set({ FormDetailsLoading: true });
+		try {
+			const { data } = await axios.get("/get-user-profile");
+			if (data.success) {
+				set({
+					ProfileFormDetails: data.payload?.fetchedUserProfile[0],
+				});
+				set({ ProfileFormData: data.payload?.fetchedUserProfile[0] });
+				set({ FormDetailsLoading: false });
+			} else {
+				set({ ProfileFormDetails: [] });
+			}
+		} catch (error) {
+			unauthorized(error.response.status);
 		}
 	},
 }));
