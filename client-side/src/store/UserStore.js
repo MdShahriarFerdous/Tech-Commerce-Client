@@ -1,14 +1,17 @@
 import { create } from "zustand";
 import axios from "axios";
 import { getBasicUserData } from "../utility/utility";
+import toast from "react-hot-toast";
 
 const UserStore = create((set) => ({
 	BasicUser: null,
+	UserData: null,
 	Loading: false,
 	//*===============================User-Register==================================
 	registerError: null,
 	UserRegisterAPI: async (postBody) => {
 		set({ Loading: true });
+
 		try {
 			const { data } = await axios.post("/user-register", postBody);
 
@@ -17,12 +20,18 @@ const UserStore = create((set) => ({
 					BasicUser: data.payload?.BasicUser,
 					registerError: null,
 				});
-				localStorage.setItem("basic-user", JSON.stringify(BasicUser));
+				localStorage.setItem(
+					"basic-user",
+					JSON.stringify(data.payload?.BasicUser)
+				);
 				set({ Loading: false });
+				return true;
 			} else {
+				set({ Loading: false });
 				set({
 					registerError: data.message || "Something went wrong",
 				});
+				toast.error(data.error);
 			}
 		} catch (error) {
 			set({ registerError: error.message || "An error occurred" });
@@ -30,12 +39,12 @@ const UserStore = create((set) => ({
 	},
 
 	//*===============================User-Verify==================================
-	UserData: null,
 	verifyError: null,
 	UserVerifyAPI: async (OTP) => {
 		set({ Loading: true });
+		let postBody = { OTP: OTP };
 		try {
-			const { data } = await axios.post("/user-verify", OTP);
+			const { data } = await axios.post("/user-verify", postBody);
 			if (data.success) {
 				set({
 					UserData: data.payload, //UserData.user, UserData.userImage
@@ -43,10 +52,13 @@ const UserStore = create((set) => ({
 				});
 				localStorage.removeItem("basic-user");
 				set({ Loading: false });
+				return true;
 			} else {
+				set({ Loading: false });
 				set({
-					verifyError: data.message || "Something went wrong",
+					verifyError: data.error || "Something went wrong",
 				});
+				toast.error(data.error);
 			}
 		} catch (error) {
 			set({ verifyError: error.message || "An error occurred" });
@@ -105,6 +117,80 @@ const UserStore = create((set) => ({
 			}
 		} catch (error) {
 			set({ otpAPIError: error.message || "An error occurred" });
+		}
+	},
+
+	//*===============================User-Login==================================
+	LogInError: null,
+	UserLogInAPI: async (postBody) => {
+		set({ Loading: true });
+		try {
+			const { data } = await axios.post("/user-login", postBody);
+			if (data.success) {
+				set({
+					UserData: data.payload, //UserData.user, UserData.userImage
+					LogInError: null,
+				});
+				set({ Loading: false });
+				return true;
+			} else if (data.message) {
+				set({ Loading: false });
+				toast.error(data.message);
+			} else {
+				set({ Loading: false });
+				set({
+					LogInError: data.error || "Something went wrong",
+				});
+				toast.error(data.error);
+			}
+		} catch (error) {
+			set({ LogInError: error.message || "An error occurred" });
+		}
+	},
+
+	//*===============================User-Context-Data==================================
+	contextError: null,
+	UserContextAPI: async () => {
+		try {
+			const { data } = await axios.get("/user-context-data");
+			if (data.success) {
+				set({
+					UserData: data.payload, //UserData.user, UserData.userImage
+					contextError: null,
+				});
+				return true;
+			} else {
+				set({
+					contextError: data.error || "Something went wrong",
+				});
+				toast.error(data.error);
+			}
+		} catch (error) {
+			set({ contextError: error.message || "An error occurred" });
+		}
+	},
+
+	//*===============================User-Logout==================================
+	LogoutError: null,
+	UserLogoutAPI: async () => {
+		try {
+			const { data } = await axios.get("/user-logout");
+			if (data.success) {
+				set({
+					UserData: null,
+					LogoutError: null,
+				});
+				toast.success(data.message);
+			} else if (data.message) {
+				toast.error(data.message);
+			} else {
+				set({
+					LogoutError: data.error || "Something went wrong",
+				});
+				toast.error(data.error);
+			}
+		} catch (error) {
+			set({ LogoutError: error.message || "An error occurred" });
 		}
 	},
 }));

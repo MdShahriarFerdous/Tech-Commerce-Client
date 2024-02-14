@@ -1,8 +1,11 @@
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
+import UserStore from "../../store/UserStore";
 
 const UserRegister = () => {
+	const { UserRegisterAPI, registerError, Loading } = UserStore();
+	const navigate = useNavigate();
 	const formik = useFormik({
 		initialValues: {
 			username: "",
@@ -15,29 +18,23 @@ const UserRegister = () => {
 			password: string().min(6, "Minimum 6 characters long").required(),
 		}),
 		onSubmit: async (values, { resetForm }) => {
-			console.log(values);
-			//give a loading here
-			// try {
-			// 	const data = await RegisterAPI(values);
-			// 	if (data.success) {
-			// 		localStorage.setItem(
-			// 			"basic",
-			// 			JSON.stringify(data.payload.BasicUser)
-			// 		);
-			// 		//navigate to give OTP page
-			// 	} else {
-			// 		toast.success("Registration Failed!");
-			// 	}
-			// } catch (error) {
-			// 	console.log(error.message);
-			// } finally {
-			//setLoading false
-			// }
-			// resetForm({
-			// 	values: "",
-			// });
+			try {
+				const message = await UserRegisterAPI(values);
+				if (message) {
+					navigate("/verify-code");
+				}
+				if (registerError) {
+					console.log(registerError);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+			resetForm({
+				values: "",
+			});
 		},
 	});
+
 	return (
 		<div className="container section">
 			<div className="row d-flex py-4 justify-content-center">
@@ -126,8 +123,16 @@ const UserRegister = () => {
 
 								<button
 									type="submit"
-									className="btn my-3 py-3 btn-success w-100">
-									Register
+									className="btn my-3 py-3 btn-success w-100"
+									disabled={Loading}>
+									{Loading ? (
+										<>
+											<div className="spinner-border spinner-border-sm mx-2"></div>
+											Processing...
+										</>
+									) : (
+										"Register"
+									)}
 								</button>
 							</form>
 							<p className="text-center mt-2">

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/plainb-logo.svg";
+import { useAuth } from "../../context/authContext";
+import UserStore from "../../store/UserStore";
 
 const NavBar = () => {
+	const { UserLogoutAPI, LogoutError } = UserStore();
 	const [searchKeyWord, setSearchKeyword] = useState("");
 	const navigate = useNavigate();
+	const [auth, setAuth] = useAuth();
 
 	const handleClick = () => {
 		if (searchKeyWord.length > 0) {
@@ -12,6 +16,19 @@ const NavBar = () => {
 			setSearchKeyword("");
 		} else {
 			return;
+		}
+	};
+
+	const handleLogout = async (e) => {
+		e.preventDefault();
+		await UserLogoutAPI();
+		setAuth({
+			...auth,
+			isLoggedIn: false,
+		});
+		navigate("/");
+		if (LogoutError) {
+			console.log(LogoutError);
 		}
 	};
 
@@ -136,36 +153,30 @@ const NavBar = () => {
 							className="btn ms-3 btn-light pt-2 d-flex">
 							<i className="bi bi-heart"></i>
 						</Link>
-						{(() => {
-							if (localStorage.getItem("login") === "1") {
-								return (
-									<>
-										<Link
-											type="button"
-											className="btn ms-3 btn-success d-flex"
-											to="/profile">
-											Profile
-										</Link>
-										<SubmitButton
-											// submit={logoutLoader}
-											text="Logout"
-											// onClick={Logout}
-											type="button"
-											className="btn ms-3 btn-success d-flex"
-										/>
-									</>
-								);
-							} else {
-								return (
-									<Link
-										type="button"
-										className="btn ms-3 btn-success d-flex py-2 px-4"
-										to="/login">
-										Login
-									</Link>
-								);
-							}
-						})()}
+
+						{auth.isLoggedIn ? (
+							<>
+								<Link
+									type="button"
+									className="btn ms-3 btn-success d-flex"
+									to="/profile">
+									Profile
+								</Link>
+								<button
+									type="button"
+									className="btn ms-3 btn-success d-flex"
+									onClick={handleLogout}>
+									Logout
+								</button>
+							</>
+						) : (
+							<Link
+								type="button"
+								className="btn ms-3 btn-success d-flex py-2 px-4"
+								to="/login">
+								Login
+							</Link>
+						)}
 					</div>
 				</div>
 			</nav>

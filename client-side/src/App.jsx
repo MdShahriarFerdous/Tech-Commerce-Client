@@ -4,7 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PageNotFound from "./pages/PageNotFound";
 // import PrivateRoute from "./routes/PrivateRoute";
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import BannedPage from "./pages/banned-page/BannedPage";
 import ProductByBrand from "./pages/product-page/ProductByBrand";
 import ProductByCategory from "./pages/product-page/ProductByCategory";
@@ -42,7 +42,7 @@ const App = () => {
 				/>
 				<Route path="*" element={<PageNotFound />} replace />
 			</Routes>
-			{/* <Toaster position="top-right" reverseOrder={false} /> */}
+			<Toaster position={"top-center"} />
 		</BrowserRouter>
 	);
 };

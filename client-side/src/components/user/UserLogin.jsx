@@ -1,8 +1,15 @@
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
+import UserStore from "../../store/UserStore";
+import toast from "react-hot-toast";
+import { useAuth } from "../../context/authContext";
 
 const UserLogin = () => {
+	const { LogInError, Loading, UserLogInAPI } = UserStore();
+	const navigate = useNavigate();
+	const [auth, setAuth] = useAuth();
+
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -13,27 +20,25 @@ const UserLogin = () => {
 			password: string().min(6, "Minimum 6 characters long").required(),
 		}),
 		onSubmit: async (values, { resetForm }) => {
-			console.log(values);
-			//give a loading here
-			// try {
-			// 	const data = await RegisterAPI(values);
-			// 	if (data.success) {
-			// 		localStorage.setItem(
-			// 			"basic",
-			// 			JSON.stringify(data.payload.BasicUser)
-			// 		);
-			// 		//navigate to give OTP page
-			// 	} else {
-			// 		toast.success("Registration Failed!");
-			// 	}
-			// } catch (error) {
-			// 	console.log(error.message);
-			// } finally {
-			//setLoading false
-			// }
-			// resetForm({
-			// 	values: "",
-			// });
+			try {
+				const message = await UserLogInAPI(values);
+				if (message) {
+					setAuth({
+						...auth,
+						isLoggedIn: true,
+					});
+					navigate("/");
+					resetForm({
+						values: "",
+					});
+					toast.success("Login Success!");
+				}
+				if (LogInError) {
+					console.log(LogInError);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
 		},
 	});
 	return (
@@ -100,8 +105,16 @@ const UserLogin = () => {
 
 								<button
 									type="submit"
-									className="btn my-3 py-3 btn-success w-100">
-									Login
+									className="btn my-3 py-3 btn-success w-100"
+									disabled={Loading}>
+									{Loading ? (
+										<>
+											<div className="spinner-border spinner-border-sm mx-2"></div>
+											Logging...
+										</>
+									) : (
+										"Login"
+									)}
 								</button>
 							</form>
 							<p className="text-center mt-2">
