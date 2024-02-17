@@ -108,12 +108,15 @@ const VerifyCode = () => {
 		}
 
 		let OTP = Number(OTPCode);
-		const message = await UserVerifyAPI(OTP);
+		const data = await UserVerifyAPI(OTP);
 
-		if (message) {
+		if (data) {
 			setAuth({
 				...auth,
+				user: data.user,
+				image: data.image,
 				isLoggedIn: true,
+				isBanned: data.user?.isBanned,
 			});
 			toast.success("Succesfully Registered!");
 			Cookies.remove("countCookie");

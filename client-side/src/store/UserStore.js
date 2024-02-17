@@ -31,7 +31,6 @@ const UserStore = create((set) => ({
 				set({
 					registerError: data.message || "Something went wrong",
 				});
-				toast.error(data.error);
 			}
 		} catch (error) {
 			set({ registerError: error.message || "An error occurred" });
@@ -52,7 +51,7 @@ const UserStore = create((set) => ({
 				});
 				localStorage.removeItem("basic-user");
 				set({ Loading: false });
-				return true;
+				return data.payload;
 			} else {
 				set({ Loading: false });
 				set({
@@ -132,16 +131,14 @@ const UserStore = create((set) => ({
 					LogInError: null,
 				});
 				set({ Loading: false });
-				return true;
+				return data.payload;
 			} else if (data.message) {
 				set({ Loading: false });
-				toast.error(data.message);
 			} else {
 				set({ Loading: false });
 				set({
 					LogInError: data.error || "Something went wrong",
 				});
-				toast.error(data.error);
 			}
 		} catch (error) {
 			set({ LogInError: error.message || "An error occurred" });
@@ -154,16 +151,11 @@ const UserStore = create((set) => ({
 		try {
 			const { data } = await axios.get("/user-context-data");
 			if (data.success) {
-				set({
-					UserData: data.payload, //UserData.user, UserData.userImage
-					contextError: null,
-				});
-				return true;
+				return data.payload;
 			} else {
 				set({
 					contextError: data.error || "Something went wrong",
 				});
-				toast.error(data.error);
 			}
 		} catch (error) {
 			set({ contextError: error.message || "An error occurred" });
@@ -180,7 +172,6 @@ const UserStore = create((set) => ({
 					UserData: null,
 					LogoutError: null,
 				});
-				toast.success(data.message);
 			} else if (data.message) {
 				toast.error(data.message);
 			} else {
@@ -194,7 +185,7 @@ const UserStore = create((set) => ({
 		}
 	},
 
-	//*===============================Profile-Form-OnChange==================================
+	//*===============================Profile-Input-Form-OnChange==================================
 	ProfileFormData: {
 		cus_add: "",
 		cus_city: "",
@@ -212,7 +203,8 @@ const UserStore = create((set) => ({
 		ship_postcode: "",
 		ship_state: "",
 	},
-	ProfileFormChange: (name, value) => {
+	ProfileFormChange: (e) => {
+		const { name, value } = e.target;
 		set((state) => ({
 			ProfileFormData: {
 				...state.ProfileFormData,
@@ -220,7 +212,8 @@ const UserStore = create((set) => ({
 			},
 		}));
 	},
-	//*===============================Profile-Form-Details==================================
+
+	//*===============================Profile-Form-Details-Show==================================
 	FormDetailsLoading: false,
 	ProfileFormDetails: null,
 	ProfileDetailsReadAPI: async () => {
@@ -235,6 +228,42 @@ const UserStore = create((set) => ({
 				set({ FormDetailsLoading: false });
 			} else {
 				set({ ProfileFormDetails: [] });
+			}
+		} catch (error) {
+			unauthorized(error.response.status);
+			return false;
+		}
+	},
+
+	//*===============================Profile-Update==================================
+	ProfileUpdateAPI: async (postBody) => {
+		set({ FormDetailsLoading: true });
+		try {
+			set({ ProfileFormDetails: null });
+			const { data } = await axios.put("/update-profile", postBody);
+			if (data.success) {
+				set({ FormDetailsLoading: false });
+				return data.payload?.updatedMessage === "Updated";
+			}
+		} catch (error) {
+			unauthorized(error.response.status);
+		}
+	},
+
+	//*===============================User-Image-Update==================================
+	ImageLoader: false,
+	UserImage: "",
+	UserImageUpdateAPI: async (imageData) => {
+		set({ ImageLoader: true });
+		try {
+			const { data } = await axios.put(
+				"/update-profile-image",
+				imageData
+			);
+			if (data.success) {
+				set({ UserImage: data.payload?.userImage });
+				set({ ImageLoader: false });
+				return true;
 			}
 		} catch (error) {
 			unauthorized(error.response.status);

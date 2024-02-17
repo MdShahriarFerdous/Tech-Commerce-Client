@@ -4,17 +4,15 @@ import Lottie from "lottie-react";
 
 const ProfileImageSkeleton = () => {
 	return (
-		<div className="card p-3">
-			<div className="card-body text-center">
+		<div className="card p-3 rounded-3">
+			<div className="card-body d-flex align-items-center justify-content-center">
 				<Lottie
-					className="w-100"
+					className="w-75"
 					animationData={ImagePlaceholder}
 					loop={true}
 				/>
-				<Skeleton count={1} />
-				<Skeleton count={1} />
-				<Skeleton count={1} />
 			</div>
+			<Skeleton count={1} className="p-3" />
 		</div>
 	);
 };

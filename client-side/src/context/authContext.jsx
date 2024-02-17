@@ -6,11 +6,12 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
 	const { UserData, UserContextAPI } = UserStore();
+
 	const [auth, setAuth] = useState({
-		user: UserData ? UserData.user : null,
-		image: UserData ? UserData.userImage : "",
+		user: null,
+		image: "",
 		isLoggedIn: false,
-		isBanned: UserData ? UserData.user?.isBanned : false,
+		isBanned: false,
 	});
 
 	axios.defaults.baseURL = "http://localhost:3000/api/v1";
@@ -20,16 +21,14 @@ const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		(async () => {
 			if (!UserData) {
-				const msg = await UserContextAPI();
-				if (msg) {
-					setAuth({
-						...auth,
-						user: UserData?.user,
-						image: UserData?.userImage,
-						isLoggedIn: true,
-						isBanned: UserData?.user?.isBanned,
-					});
-				}
+				const data = await UserContextAPI();
+				setAuth({
+					...auth,
+					user: data.user,
+					image: data.image,
+					isLoggedIn: true,
+					isBanned: data.user?.isBanned,
+				});
 			} else {
 				setAuth({
 					...auth,

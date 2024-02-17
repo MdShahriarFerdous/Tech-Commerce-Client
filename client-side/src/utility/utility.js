@@ -10,6 +10,11 @@ export const getBasicUserData = () => {
 
 export const unauthorized = (code) => {
 	if (code === 401 || code === 400) {
-		window.location.href = "/login";
+		window.location.replace("/login");
 	}
+};
+
+export const truncateString = (str, num) => {
+	if (str.length > num) return str.slice(0, num) + " .... ";
+	else return str;
 };

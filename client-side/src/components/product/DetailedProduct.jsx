@@ -3,25 +3,62 @@ import ProductImages from "./ProductImages";
 import ProductStore from "../../store/ProductStore";
 import parse from "html-react-parser";
 import ProductReviews from "./ProductReviews";
+// import { truncateString } from "./../../utility/utility";
+import CartStore from "../../store/CartStore";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import WishStore from "../../store/WishStore";
 
 const DetailedProduct = () => {
+	const navigate = useNavigate();
 	const { ProductDetails } = ProductStore();
 	const [quantity, setQuantity] = useState(1);
+	const {
+		AddToCartLoading,
+		AddToCartAPI,
+		CartForm,
+		CartFormOnChange,
+		CartListAPI,
+	} = CartStore();
+
+	const { WishListAPI, AddToWishAPI, AddToWishLoading } = WishStore();
 
 	const incrementQuantity = (e) => {
 		e.preventDefault();
 		setQuantity((qty) => qty + 1);
+		CartForm.qty = quantity + 1;
 	};
 
 	const decrementQuantity = (e) => {
 		e.preventDefault();
 		if (quantity > 1) {
 			setQuantity((qty) => qty - 1);
+			CartForm.qty = quantity - 2;
+		}
+	};
+
+	const AddToCart = async (productId) => {
+		const res = await AddToCartAPI(CartForm, productId);
+		if (res) {
+			toast.success("Cart Item Added");
+			await CartListAPI();
+		} else {
+			navigate("/login");
+		}
+	};
+
+	const AddToWish = async (productId) => {
+		const res = await AddToWishAPI(productId);
+		if (res) {
+			toast.success("Added to Wish List");
+			await WishListAPI();
+		} else {
+			navigate("/login");
 		}
 	};
 
 	return (
-		<div>
+		<>
 			<div className="container mt-5">
 				<div className="row">
 					<div className="col-md-7 p-3">
@@ -87,11 +124,9 @@ const DetailedProduct = () => {
 							<div className="col-4 p-2">
 								<label className="bodySmal">Size</label>
 								<select
-									// value={cartData["size"]}
-									name=""
-									// onChange={(e) => {
-									// 	inputOnChange("size", e.target.value);
-									// }}
+									value={CartForm.size}
+									name="size"
+									onChange={CartFormOnChange}
 									className="form-control my-2 form-select">
 									<option value="">Choose Size</option>
 									{ProductDetails[0]?.productDetails?.size
@@ -108,11 +143,9 @@ const DetailedProduct = () => {
 							<div className="col-4 p-2">
 								<label className="bodySmal">Color</label>
 								<select
-									// value={cartData["color"]}
-									name=""
-									// onChange={(e) => {
-									// 	inputOnChange("color", e.target.value);
-									// }}
+									value={CartForm.color}
+									name="color"
+									onChange={CartFormOnChange}
 									className="form-control my-2 form-select">
 									<option value="">Choose Color</option>
 									{ProductDetails[0]?.productDetails?.color
@@ -151,22 +184,38 @@ const DetailedProduct = () => {
 
 							<div className="col-4  p-2">
 								<button
-									// onClick={AddCart}
+									onClick={() => {
+										AddToCart(ProductDetails[0]._id);
+									}}
 									className="btn w-100 btn-success"
 									text="Add to Cart"
-									// submit={cartBtnLoader}
-								>
-									Add to Cart
+									disabled={AddToCartLoading}>
+									{AddToCartLoading ? (
+										<>
+											<div className="spinner-border spinner-border-sm mx-2"></div>
+											Adding...
+										</>
+									) : (
+										"Add to Cart"
+									)}
 								</button>
 							</div>
 							<div className="col-4  p-2">
 								<button
-									// onClick={AddWish}
+									onClick={() => {
+										AddToWish(ProductDetails[0]._id);
+									}}
 									className="btn w-100 btn-success"
 									text="Add to Wish"
-									// submit={wishBtnLoader}
-								>
-									Add to Wish
+									disabled={AddToWishLoading}>
+									{AddToWishLoading ? (
+										<>
+											<div className="spinner-border spinner-border-sm mx-2"></div>
+											Saving...
+										</>
+									) : (
+										"Add to Wish"
+									)}
 								</button>
 							</div>
 						</div>
@@ -223,13 +272,7 @@ const DetailedProduct = () => {
 					</div>
 				</div>
 			</div>
-
-			{/* {data[0] ? (
-				<SmilierProduct categoryID={data[0]["categoryID"]} />
-			) : (
-				""
-			)} */}
-		</div>
+		</>
 	);
 };
 

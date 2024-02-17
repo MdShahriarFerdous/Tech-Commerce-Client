@@ -11,6 +11,7 @@ import ProductByCategory from "./pages/product-page/ProductByCategory";
 import ProductBySearch from "./pages/product-page/ProductBySearch";
 import ProductDetails from "./pages/product-page/ProductDetails";
 import VerifyPage from "./pages/VerifyPage";
+import ProfilePage from "./pages/user-pages/ProfilePage";
 
 const App = () => {
 	return (
@@ -23,6 +24,7 @@ const App = () => {
 				{/* <Route path="/user" element={<PrivateRoute />}>
 					<Route path="secret-page" element={<SecretPage />} />
 				</Route> */}
+				<Route path="/profile" element={<ProfilePage />} />
 				<Route path="/banned" element={<BannedPage />} />
 				<Route
 					path="/product-brand/:brandId"

@@ -21,11 +21,14 @@ const UserLogin = () => {
 		}),
 		onSubmit: async (values, { resetForm }) => {
 			try {
-				const message = await UserLogInAPI(values);
-				if (message) {
+				const data = await UserLogInAPI(values);
+				if (data) {
 					setAuth({
 						...auth,
+						user: data.user,
+						image: data.image,
 						isLoggedIn: true,
+						isBanned: data.user?.isBanned,
 					});
 					navigate("/");
 					resetForm({
@@ -34,7 +37,7 @@ const UserLogin = () => {
 					toast.success("Login Success!");
 				}
 				if (LogInError) {
-					console.log(LogInError);
+					toast.success(LogInError);
 				}
 			} catch (error) {
 				console.log(error.message);
