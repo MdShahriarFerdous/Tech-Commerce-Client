@@ -34,7 +34,9 @@ const ProductByCategory = () => {
 						<CategoriesSkeleton />
 					</>
 				) : (
-					<AliasProductList />
+					<>
+						<AliasProductList />
+					</>
 				)}
 			</Layout>
 		</Suspense>

@@ -4,13 +4,14 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PageNotFound from "./pages/PageNotFound";
 // import PrivateRoute from "./routes/PrivateRoute";
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import BannedPage from "./pages/banned-page/BannedPage";
 import ProductByBrand from "./pages/product-page/ProductByBrand";
 import ProductByCategory from "./pages/product-page/ProductByCategory";
 import ProductBySearch from "./pages/product-page/ProductBySearch";
 import ProductDetails from "./pages/product-page/ProductDetails";
 import VerifyPage from "./pages/VerifyPage";
+import ProfilePage from "./pages/user-pages/ProfilePage";
 
 const App = () => {
 	return (
@@ -23,6 +24,7 @@ const App = () => {
 				{/* <Route path="/user" element={<PrivateRoute />}>
 					<Route path="secret-page" element={<SecretPage />} />
 				</Route> */}
+				<Route path="/profile" element={<ProfilePage />} />
 				<Route path="/banned" element={<BannedPage />} />
 				<Route
 					path="/product-brand/:brandId"
@@ -42,7 +44,7 @@ const App = () => {
 				/>
 				<Route path="*" element={<PageNotFound />} replace />
 			</Routes>
-			{/* <Toaster position="top-right" reverseOrder={false} /> */}
+			<Toaster position={"top-center"} />
 		</BrowserRouter>
 	);
 };

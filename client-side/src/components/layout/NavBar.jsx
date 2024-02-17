@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/plainb-logo.svg";
+import { useAuth } from "../../context/authContext";
+import UserStore from "../../store/UserStore";
+import CartStore from "../../store/CartStore";
+import WishStore from "../../store/WishStore";
 
 const NavBar = () => {
+	const { UserLogoutAPI, LogoutError } = UserStore();
 	const [searchKeyWord, setSearchKeyword] = useState("");
 	const navigate = useNavigate();
+	const [auth, setAuth] = useAuth();
+	const { CartListAPI, CartListCount, ResetCartListCount } = CartStore();
+	const { WishListAPI, WishListCount, ResetWishListCount } = WishStore();
 
 	const handleClick = () => {
 		if (searchKeyWord.length > 0) {
@@ -14,6 +22,29 @@ const NavBar = () => {
 			return;
 		}
 	};
+
+	const handleLogout = async (e) => {
+		await UserLogoutAPI();
+		setAuth({
+			...auth,
+			isLoggedIn: false,
+		});
+		ResetCartListCount();
+		ResetWishListCount();
+		navigate("/");
+		if (LogoutError) {
+			console.log(LogoutError);
+		}
+	};
+
+	useEffect(() => {
+		if (auth.isLoggedIn === true) {
+			(async () => {
+				await CartListAPI();
+				await WishListAPI();
+			})();
+		}
+	}, [CartListCount, WishListCount]);
 
 	return (
 		<>
@@ -128,44 +159,52 @@ const NavBar = () => {
 							to="/cart"
 							type="button"
 							className="btn ms-3 btn-light position-relative">
-							<i className="bi bi-bag"></i>
+							<i className="bi text-dark bi-bag"></i>
+							{CartListCount !== 0 ? (
+								<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill btn-success">
+									{CartListCount}
+									<span className="visually-hidden">
+										unread messages
+									</span>
+								</span>
+							) : null}
 						</Link>
 						<Link
 							to="/wish"
 							type="button"
-							className="btn ms-3 btn-light pt-2 d-flex">
+							className="btn ms-3 btn-light pt-2 d-flex position-relative">
 							<i className="bi bi-heart"></i>
+
+							{WishListCount !== 0 ? (
+								<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill btn-success">
+									{WishListCount}
+								</span>
+							) : null}
 						</Link>
-						{(() => {
-							if (localStorage.getItem("login") === "1") {
-								return (
-									<>
-										<Link
-											type="button"
-											className="btn ms-3 btn-success d-flex"
-											to="/profile">
-											Profile
-										</Link>
-										<SubmitButton
-											// submit={logoutLoader}
-											text="Logout"
-											// onClick={Logout}
-											type="button"
-											className="btn ms-3 btn-success d-flex"
-										/>
-									</>
-								);
-							} else {
-								return (
-									<Link
-										type="button"
-										className="btn ms-3 btn-success d-flex py-2 px-4"
-										to="/login">
-										Login
-									</Link>
-								);
-							}
-						})()}
+
+						{auth.isLoggedIn ? (
+							<>
+								<Link
+									type="button"
+									className="btn ms-3 btn-success d-flex"
+									to="/profile">
+									Profile
+								</Link>
+								<button
+									type="button"
+									className="btn ms-3 btn-success d-flex"
+									onClick={handleLogout}>
+									Logout
+								</button>
+							</>
+						) : (
+							<Link
+								type="button"
+								className="btn ms-3 btn-success d-flex py-2 px-4"
+								to="/login">
+								Login
+							</Link>
+						)}
 					</div>
 				</div>
 			</nav>

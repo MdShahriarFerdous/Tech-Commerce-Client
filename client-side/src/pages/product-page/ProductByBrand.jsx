@@ -34,7 +34,9 @@ const ProductByBrand = () => {
 						<ProductsSkeleton />
 					</>
 				) : (
-					<AliasProductList />
+					<>
+						<AliasProductList />
+					</>
 				)}
 			</Layout>
 		</Suspense>

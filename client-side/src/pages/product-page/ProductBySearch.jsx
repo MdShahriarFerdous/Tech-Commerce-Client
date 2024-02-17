@@ -33,7 +33,9 @@ const ProductBySearch = () => {
 						<ProductsSkeleton />
 					</>
 				) : (
-					<AliasProductList />
+					<>
+						<AliasProductList />
+					</>
 				)}
 			</Layout>
 		</Suspense>

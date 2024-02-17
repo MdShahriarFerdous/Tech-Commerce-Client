@@ -46,10 +46,8 @@ const ProductDetails = () => {
 			<Layout>
 				{ReviewListError || ProductDetailsError || isLoading ? (
 					<>
-						<div>
-							<DetailsSkeleton />
-							<BrandsSkeleton />
-						</div>
+						<DetailsSkeleton />
+						<BrandsSkeleton />
 					</>
 				) : (
 					<>
