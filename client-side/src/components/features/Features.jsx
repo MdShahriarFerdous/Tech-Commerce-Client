@@ -30,7 +30,7 @@ const Features = () => {
 		return (
 			<div className="container section">
 				<div className="row">
-					{featureList.map((item, i) => {
+					{featureList && featureList.map((item, i) => {
 						return (
 							<div
 								key={i}
