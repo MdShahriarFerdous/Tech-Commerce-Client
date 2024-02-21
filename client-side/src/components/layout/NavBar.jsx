@@ -38,7 +38,7 @@ const NavBar = () => {
 	};
 
 	useEffect(() => {
-		if (auth.isLoggedIn === true) {
+		if (auth?.isLoggedIn === true) {
 			(async () => {
 				await CartListAPI();
 				await WishListAPI();
