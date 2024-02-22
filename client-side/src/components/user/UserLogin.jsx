@@ -30,6 +30,7 @@ const UserLogin = () => {
 						isLoggedIn: true,
 						isBanned: data.user?.isBanned,
 					});
+					localStorage.setItem("auth", JSON.stringify(auth));
 					navigate("/");
 					resetForm({
 						values: "",

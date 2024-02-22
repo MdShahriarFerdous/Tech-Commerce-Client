@@ -118,6 +118,7 @@ const VerifyCode = () => {
 				isLoggedIn: true,
 				isBanned: data.user?.isBanned,
 			});
+			localStorage.setItem("auth", JSON.stringify(auth));
 			toast.success("Succesfully Registered!");
 			Cookies.remove("countCookie");
 			navigate("/");
