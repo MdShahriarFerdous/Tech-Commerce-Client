@@ -14,9 +14,9 @@ const AuthProvider = ({ children }) => {
 		isBanned: false,
 		token: "",
 	});
-	axios.defaults.baseURL = "http://localhost:3000/api/v1";
-	// axios.defaults.baseURL =
-	// 	"https://tech-commerce-server-roan.vercel.app/api/v1";
+	// axios.defaults.baseURL = "http://localhost:3000/api/v1";
+	axios.defaults.baseURL =
+		"https://tech-commerce-server-roan.vercel.app/api/v1";
 	// axios.defaults.withCredentials = true;
 	axios.defaults.headers.common["Authorization"] = auth?.token;
 
