@@ -14,30 +14,24 @@ const AuthProvider = ({ children }) => {
 		isBanned: false,
 		token: "",
 	});
-	// axios.defaults.baseURL = "http://localhost:3000/api/v1";
-	axios.defaults.baseURL =
-		"https://tech-commerce-server-roan.vercel.app/api/v1";
+	axios.defaults.baseURL = "http://localhost:3000/api/v1";
+	// axios.defaults.baseURL =
+	// 	"https://tech-commerce-server-roan.vercel.app/api/v1";
 	// axios.defaults.withCredentials = true;
 	axios.defaults.headers.common["Authorization"] = auth?.token;
 
 	useEffect(() => {
 		const data = localStorage.getItem("auth");
 		(async () => {
-			if (!data) {
-				// const data = await UserContextAPI();
-				if (data) {
-					const parsedData = JSON.parse(data);
-					setAuth({
-						...auth,
-						user: parsedData?.user,
-						image: parsedData?.image,
-						isLoggedIn: true,
-						isBanned: parsedData?.user?.isBanned,
-						token: parsedData?.token,
-					});
-				} else {
-					return;
-				}
+			if (data) {
+				const parsedData = JSON.parse(data);
+				setAuth({
+					...auth,
+					user: parsedData?.user,
+					image: parsedData?.userImage,
+					isLoggedIn: true,
+					token: parsedData?.token,
+				});
 			} else {
 				setAuth({
 					...auth,

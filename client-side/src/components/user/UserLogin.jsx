@@ -22,15 +22,17 @@ const UserLogin = () => {
 		onSubmit: async (values, { resetForm }) => {
 			try {
 				const data = await UserLogInAPI(values);
+
 				if (data) {
 					setAuth({
 						...auth,
-						user: data.user,
-						image: data.image,
+						user: data?.user,
+						image: data?.image,
 						isLoggedIn: true,
-						isBanned: data.user?.isBanned,
+						isBanned: data?.user?.isBanned,
+						token: data?.token,
 					});
-					localStorage.setItem("auth", JSON.stringify(auth));
+					localStorage.setItem("auth", JSON.stringify(data));
 					navigate("/");
 					resetForm({
 						values: "",
